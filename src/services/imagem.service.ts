@@ -20,12 +20,12 @@ export class ImagemService {
     await this.validar(imagem);
 
     const result = await this.manager.query(
-      `INSERT INTO imagem (key, data) VALUES (?, ?)`,
+      `INSERT INTO imagem (\`key\`, \`data\`) VALUES (?, ?)`,
       [imagem.key, imagem.data],
     );
 
     const saved = {
-      ...imagem,
+      key: imagem.key,
       id: result.insertId,
     };
     return saved;
@@ -37,13 +37,13 @@ export class ImagemService {
 
   async encontrarPorKey(key: string) {
     const result = await this.manager.query(
-      `SELECT * FROM imagem WHERE key = ?`,
+      `SELECT * FROM imagem WHERE \`key\` = ?`,
       [key],
     );
 
     if (result.length === 0) return null;
 
-    const item = result[0];
+    const [item] = result;
 
     return {
       id: item.id,

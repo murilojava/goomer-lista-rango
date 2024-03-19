@@ -16,9 +16,10 @@ E quais bibliotecas foram utilizadas no auxílio da construção do código.
 - [X] Definir estrutura base do projeto
 - [X] Definir modelo do banco de dados
 - [X] Implementar modelos do banco de dados e seus serviços
-- [ ] Implementar controllers da aplicação
-- [ ] Implementar rotas de acesso
+- [X] Implementar controllers da aplicação
+- [X] Implementar rotas de acesso
 - [ ] Validar funcionamento da aplicação
+- [ ] Configurar docker-compose para subir o banco
 
 ## Desafios
 
@@ -74,3 +75,441 @@ Para isto basta fazer uma copia do arquivo `.env.example`para `.env`e no arquivo
 
 `DB_SYNC`= parametro que faz sincronização do banco de dados com as entidade de da aplicação (`true` para ativar e `false` para iniativar)
 
+
+Após a configuração a API já pode ser executada, localmente pode ser utilizado o comando:
+
+`npm run dev`
+
+
+Para rodar em produção é necessário fazer o build:
+
+`npm run build`
+
+E iniciar a aplicação com:
+
+`npm run start`
+
+## Rotas
+
+A aplicação possui as seguintes rotas
+
+### Health
+
+``` GET /health ```
+
+Será retornado o se aplicação está sendo executada e se o banco de dados está conectado.
+
+
+### Imagem
+
+``` POST /imagem ```
+
+content-type: 'multipart/form-data'
+
+[
+  imagem: file
+]
+
+Caso seja retornado sucesso será retornado o seguinte formato:
+
+```
+{
+	"key": "9ce177340e9f9863a5f65effacd85d45.jpg",
+	"id": 1
+}
+```
+
+O `id` será utilizado para preencher o campo foto dos registros que exigem foto
+
+O `key` será utilizado para poder visualizar a imagem
+
+
+``` GET /imagem/{key} ```
+
+Será retornado a imagem associada a key, poderá ser utilizado em um `src` de uma tag de img por exemplo.
+
+
+### Empresa
+
+
+
+``` POST /empresa ```
+
+content-type: 'application/json'
+```
+{
+  "nome": "Nome da empresa",
+  "rua": "Rua de exemplo",
+  "numero": "10",
+  "bairro": "Bairro de teste",
+  "cidade": "Cidade Exemplo",
+
+  "foto" : { id:1 },
+
+  horariosFuncionamento: [
+    {
+      diaSemana: 1,
+      inicio:"11:00",
+      fim: "15:00"
+    },
+    {
+      diaSemana: 2,
+      inicio:"11:00",
+      fim: "15:00"
+    },
+    {
+      diaSemana: 3,
+      inicio:"18:00",
+      fim: "23:00"
+    }
+  ]
+}
+```
+
+Caso seja retornado sucesso será retornado o seguinte formato:
+
+```
+{
+	"id": 1 // id gerado
+  // dados informados na request
+}
+```
+
+``` GET /empresa ```
+
+Serão retornadas todas as empresas cadastradas em formato de lista
+
+```
+[
+   {
+    "id": 1,
+    "nome": "nome da empresa",
+    "rua": "rua",
+    "numero": "numero",
+    "bairro": "nome do bairro",
+    "cidade": "nome da cidade",
+    "foto": {
+      "id": 1,
+      "key": "algumacoisa.png"
+    }
+   },
+  {
+    "id": 2,
+    "nome": "nome da empresa 2",
+    "rua": "rua",
+    "numero": "numero",
+    "bairro": "nome do bairro",
+    "cidade": "nome da cidade",
+    "foto": {
+      "id": 2,
+      "key": "algumacoisa.png"
+    }
+  }
+]
+```
+
+
+
+``` GET /empresa/{id} ```
+
+Caso seja encontra uma empresa para o id informado será retornado os dados no seguinte formato
+
+```
+ {
+    "id": 1,
+    "nome": "nome da empresa",
+    "rua": "rua",
+    "numero": "numero",
+    "bairro": "nome do bairro",
+    "cidade": "nome da cidade",
+    "foto": {
+      "id": 1,
+      "key": "algumacoisa.png"
+    },
+    "horariosFuncionamento": [
+      {
+        "diaSemana": 1,
+        "inicio":"11:00",
+        "fim": "15:00"
+      },
+      {
+        "diaSemana": 2,
+        "inicio":"11:00",
+        "fim": "15:00"
+      },
+      {
+        "diaSemana": 3,
+        "inicio":"18:00",
+        "fim": "23:00"
+      }
+    ]
+  }
+```
+
+
+
+``` PATCH /empresa/{id} ```
+
+Caso seja encontra uma empresa para o id informado será atualizado com o body passado
+
+
+content-type: 'application/json'
+```
+{
+  "nome": "Nome da empresa",
+  "rua": "Rua de exemplo",
+  "numero": "10",
+  "bairro": "Bairro de teste",
+  "cidade": "Cidade Exemplo",
+
+  "foto" : { "id":1 },
+
+  "horariosFuncionamento": [
+    {
+      "diaSemana": 1,
+      "inicio":"11:00",
+      "fim": "15:00"
+    },
+    {
+      "diaSemana": 2,
+      "inicio":"11:00",
+      "fim": "15:00"
+    },
+    {
+      "diaSemana": 3,
+      "inicio":"18:00",
+      "fim": "23:00"
+    }
+  ]
+}
+```
+
+
+
+``` DELETE /empresa/{id} ```
+
+Caso seja encontra uma empresa para o id informado será exlcuída do banco de dados.
+Serão excluido também suas categorias e produtos associados.
+
+
+O retorno esperado é:
+
+```
+  {
+    mensagem: "Empresa removida com sucesso!"
+  }
+```
+
+
+
+### Categoria
+
+
+
+``` POST /categoria/{empresaId} ```
+
+content-type: 'application/json'
+```
+{
+  "nome": "Nome da empresa"
+}
+```
+
+Caso seja retornado sucesso será retornado o seguinte formato:
+
+```
+{
+	"id": 1 // id gerado
+  // dados informados na request
+}
+```
+
+``` GET /categoria/{empresaId} ```
+
+Serão retornadas todas as categorias cadastradas em formato de lista
+
+```
+[
+   {
+    "id": 1,
+    "nome": "nome da categoria"   
+   },
+  {
+    "id": 2,
+    "nome": "nome da categoria 2"
+  }
+]
+```
+
+
+``` GET /categoria/{empresaId}/{id} ```
+
+Caso seja encontra uma categoria para o id informado será retornado os dados no seguinte formato
+
+```
+ {
+    "id": 1,
+    "nome": "nome da empresa"    
+ }
+```
+
+
+
+``` PATCH /categoria/{empresaId}/{id} ```
+
+Caso seja encontra uma categoria para o id informado será atualizado com o body passado
+
+
+content-type: 'application/json'
+```
+{
+  "nome": "Nome da categoria",
+}
+```
+
+
+
+``` DELETE /categoria/{empresaId}/{id} ```
+
+Serão excluido também suas categorias e produtos associados.
+
+O retorno esperado é:
+
+```
+  {
+    "mensagem": "Categoria removida com sucesso!"
+  }
+```
+
+
+
+
+### Produto
+
+
+
+``` POST /produto/{empresaId} ```
+
+content-type: 'application/json'
+```
+{
+  "nome": "Nome do produto"
+  "foto": { id: 1},
+  "categoria": {id:1},
+  "preco": 34.60,
+  "emPromocao": false,
+  "precoPromocional": 29.90,
+  "descricaoPromocional": "Aproveite nossa maravilhosa promoção";
+  "horariosPromocionais": [
+    {
+      "diaSemana": 1,
+      "inicio":"13:00",
+      "fim": "13:30"
+    }
+  ]
+}
+```
+
+Caso seja retornado sucesso será retornado o seguinte formato:
+
+```
+{
+	"id": 1 // id gerado
+  // dados informados na request
+}
+```
+
+``` GET /produto/{empresaId} ```
+
+Serão retornadas todas os produtos cadastradas em formato de lista
+
+```
+[
+  {
+    "id": 1,
+    "nome": "Nome do produto"
+    "foto": { id: 1},
+    "categoria": {id:1},
+    "preco": 34.60,
+    "emPromocao": false,
+    "precoPromocional": 29.90,
+    "descricaoPromocional": "Aproveite nossa maravilhosa promoção";
+  },
+  {
+    "id": 2,
+    "nome": "Nome do produto 2"
+    "foto": { "id": 2, "key": "alguma.jpg"},
+    "categoria": {"id":1, "nome": "Bebidas"},
+    "preco": 34.60,
+    "emPromocao": true,
+    "precoPromocional": 29.90,
+    "descricaoPromocional": "Aproveite nossa maravilhosa promoção";  
+  }
+]
+```
+
+
+``` GET /produto/{empresaId}/{id} ```
+
+Caso seja encontra um produto para o id informado será retornado os dados no seguinte formato
+
+```
+{
+  "id": 1,
+  "nome": "Nome do produto"
+  "foto": { id: 1},
+  "categoria": {id:1},
+  "preco": 34.60,
+  "emPromocao": false,
+  "precoPromocional": 29.90,
+  "descricaoPromocional": "Aproveite nossa maravilhosa promoção";
+  "horariosPromocionais": [
+    {
+      "diaSemana": 1,
+      "inicio":"13:00",
+      "fim": "13:30"
+    }
+  ]
+}
+```
+
+
+
+``` PATCH /produto/{empresaId}/{id} ```
+
+Caso seja encontra um produto para o id informado será atualizado com o body passado
+
+
+content-type: 'application/json'
+```
+{
+  "nome": "Nome da produto",
+  "foto": { id: 1},
+  "categoria": {id: 1},
+  "preco": 34.60,
+  "emPromocao": false,
+  "precoPromocional": 29.90,
+  "descricaoPromocional": "Aproveite nossa maravilhosa promoção";
+  "horariosPromocionais": [
+    {
+      "diaSemana": 1,
+      "inicio":"13:00",
+      "fim": "13:30"
+    }
+  ]
+}
+```
+
+
+
+``` DELETE /produto/{empresaId}/{id} ```
+
+Caso seja encontrado um produto para o id informado será excluído do banco de dados.
+
+O retorno esperado é:
+
+```
+  {
+    mensagem: "Produto removido com sucesso!"
+  }
+```
