@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { AppDataSource } from "../database/app-datasource";
+import { getDataSource } from "../database/app-datasource";
 import { Controller } from "./controller.interface";
 
 export class HealthController implements Controller {
@@ -8,7 +8,7 @@ export class HealthController implements Controller {
   }
 
   async index(req: Request, res: Response) {
-    const dbOk = AppDataSource.isInitialized;
+    const dbOk = getDataSource().isInitialized;
 
     return res.json({ message: "Servidor está rodando.", dbOk });
   }

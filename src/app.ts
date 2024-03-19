@@ -1,5 +1,5 @@
 import express from "express";
-import { AppDataSource } from "./database/app-datasource";
+import { getDataSource } from "./database/app-datasource";
 import { Routes } from "./routes/routes";
 
 export class App {
@@ -18,7 +18,7 @@ export class App {
   async initDatabase() {
     console.info("Iniciando conexão com o banco de dados");
 
-    await AppDataSource.initialize();
+    await getDataSource().initialize();
 
     console.info("Banco de dados iniciado com sucesso");
   }

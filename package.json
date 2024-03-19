@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsup",
     "start": "node dist/index",
-    "dev": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "test": "vitest src/tests/"
   },
   "keywords": [],
