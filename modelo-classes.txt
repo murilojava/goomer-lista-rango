@@ -1,0 +1,61 @@
+Modelos de Classes 
+
+Imagem {
+	id: number	
+	key: string
+	data: blob
+}
+
+HorarioFuncionamento {
+	id: number
+	empresa: Empresa
+	
+	diaSemana: number;
+	inicio: string;
+	fim: string;
+}
+
+Empresa {
+	id: number
+	foto: Imagem
+	nome: string
+	
+	endereco: string
+	
+	rua: string
+	numero: string
+	bairro: string
+	cidade: string
+	
+	horariosFuncionamento: HorarioFuncionamento[]
+}
+
+Categoria {
+	id: number
+	empresa: Empresa
+	nome: string
+}
+
+HorarioPromocional {
+	id: number
+	produto: Produto
+	
+	diaSemana: number;
+	inicio: string;
+	fim: string;
+}
+
+ProdutoEmpresa {
+
+	id: number
+	empresa: Empresa
+	foto: Imagem
+	nome: string
+	preco: number
+	categoria: Categoria
+	emPromocao: boolean
+	
+	precoPromocional: number
+	descricaoPromocional: string
+	horariosPromocionais: HorarioPromocional[]	
+}
