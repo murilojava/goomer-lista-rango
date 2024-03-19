@@ -2,8 +2,8 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn
 } from "typeorm";
 import { HorarioFuncionamento } from "./horario-funcionamento.entity";
 import { Imagem } from "./imagem.entity";
@@ -13,7 +13,7 @@ export class Empresa {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne((type) => Imagem, { cascade: false })
+  @ManyToOne((type) => Imagem, { cascade: false })
   @JoinColumn({ name: "foto_id" })
   foto: Imagem;
 

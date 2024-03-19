@@ -68,7 +68,7 @@ export class ProdutoController implements Controller {
 
       return res.json({
         messagem: "Produto atualizado com sucesso!",
-        empresa: response,
+        produto: response,
       });
     } catch (e) {
       next(e);

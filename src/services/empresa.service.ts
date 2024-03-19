@@ -101,7 +101,7 @@ export class EmpresaService {
   ) {
     for (const horario of horariosFuncionamento) {
       const result = await this.manager.query(
-        `INSERT INTO horario_funcionamento (dia_semana, inicio, fim, empresa_id) VALUES (?, ?, ?, ?)`,
+        `INSERT INTO horario_funcionamento (diaSemana, inicio, fim, empresa_id) VALUES (?, ?, ?, ?)`,
         [horario.diaSemana, horario.inicio, horario.fim, empresaId],
       );
 
@@ -157,7 +157,7 @@ export class EmpresaService {
   async encontrarTodas() {
     const dbResult = await this.manager.query(
       `select e.*, f.id as foto_id, f.key as foto_key from empresa as e
-      left join foto as f on e.foto_id = f.id`,
+      left join imagem as f on e.foto_id = f.id`,
     );
 
     const result = dbResult.map((item: any) => {
@@ -183,7 +183,7 @@ export class EmpresaService {
   async encontrarEmpresaPorId(id: number) {
     const result = await this.manager.query(
       `select e.*, f.id as foto_id, f.key as foto_key from empresa as e
-      left join foto as f on e.foto_id = f.id
+      left join imagem as f on e.foto_id = f.id
       where e.id = ?`,
       [id],
     );
@@ -222,7 +222,7 @@ export class EmpresaService {
     return result.map((item: any) => {
       return {
         id: item.id,
-        diaSemana: item.dia_semana,
+        diaSemana: item.diaSemana,
         inicio: item.inicio,
         fim: item.fim,
       };

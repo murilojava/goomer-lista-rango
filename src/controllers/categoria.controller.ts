@@ -11,8 +11,9 @@ export class CategoriaController implements Controller {
   }
 
   initRoutes(router: Router): void {
-    router.get("/categoria/:empresaId/", this.listar);
+    router.get("/categoria/:empresaId", this.listar);
     router.post("/categoria/:empresaId", this.criar);
+    router.get("/categoria/:empresaId/:categoriaId", this.listarUnico);
     router.patch("/categoria/:empresaId/:categoriaId", this.atualizar);
     router.delete("/categoria/:empresaId/:categoriaId", this.remover);
   }
@@ -25,6 +26,18 @@ export class CategoriaController implements Controller {
     );
 
     return res.json(categorias);
+  };
+
+  listarUnico = async (req: Request, res: Response, next: any) => {
+    const { categoriaId } = req.params;
+
+    const categoria = await this.categoriaService.encontrarPorId(+categoriaId);
+
+    if (!categoria) {
+      return res.status(404).json({ message: "Categoria não encontrada" });
+    }
+
+    return res.json(categoria);
   };
 
   criar = async (req: Request, res: Response, next: any) => {
@@ -53,9 +66,9 @@ export class CategoriaController implements Controller {
       empresa: { id: +empresaId },
     };
     try {
-      await this.categoriaService.atualizar(+categoriaId, categoria);
+      const categoriaAtualizada = await this.categoriaService.atualizar(+categoriaId, categoria);
 
-      return res.json({ messagem: "Categoria atualizada com sucesso!" });
+      return res.json({ messagem: "Categoria atualizada com sucesso!", categoria: categoriaAtualizada });
     } catch (e) {
       next(e);
     }

@@ -1,5 +1,6 @@
 import express from "express";
 import { getDataSource } from "./database/app-datasource";
+import { DomainError } from "./erros/domain.error";
 import { Routes } from "./routes/routes";
 
 export class App {
@@ -13,6 +14,7 @@ export class App {
     await this.initDatabase();
     this.initMiddlewares();
     this.initRoutes();
+    this.handleErrors();
   }
 
   async initDatabase() {
@@ -39,10 +41,31 @@ export class App {
     console.info("Rotas iniciadas com sucesso");
   }
 
+  handleErrors() {
+    this.app.use((err: any, req: any, res: any, next: any) => {
+      if(err){
+        console.error(err)
+        
+        if(err instanceof DomainError) {
+          return res.status(400).json({ message: err.message });
+        }
+        
+        return res.status(500).json({ message: "Erro interno" });
+      }
+      
+      res.status(404).json({ message: "Rota não encontrada" });
+    });
+  }
+
   start() {
     const port = process.env.PORT || 3000;
     this.app?.listen(port, () => {
       console.info(`Servidor iniciado na porta: ${port}`);
     });
+  }
+
+  stop() {
+    console.info("Parando servidor");
+    this.app.disable("server");
   }
 }

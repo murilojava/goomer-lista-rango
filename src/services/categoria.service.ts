@@ -97,4 +97,23 @@ export class CategoriaService {
 
     return result;
   }
+
+  async encontrarPorId(id: number) {
+    const dbResult = await this.manager.query(
+      `select * from categoria where id = ?`,
+      [id],
+    );
+
+    if (dbResult.length === 0) return null;
+
+    const item = dbResult[0];
+
+    return {
+      id: item.id,
+      nome: item.nome,
+      empresa: {
+        id: item.empresa_id,
+      },
+    };
+  }
 }

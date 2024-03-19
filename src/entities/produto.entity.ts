@@ -3,7 +3,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Categoria } from "./categoria.entity";
@@ -20,11 +19,11 @@ export class Produto {
   @JoinColumn({ name: "empresa_id" })
   empresa: Empresa;
 
-  @OneToOne((type) => Imagem, { cascade: false })
+  @ManyToOne((type) => Imagem, { cascade: false })
   @JoinColumn({ name: "foto_id" })
   foto: Imagem;
 
-  @ManyToOne((type) => Imagem, { cascade: false })
+  @ManyToOne((type) => Categoria, { cascade: false })
   @JoinColumn({ name: "categoria_id" })
   categoria: Categoria;
 
@@ -37,7 +36,7 @@ export class Produto {
   @Column({ type: "boolean", default: false })
   emPromocao: boolean;
 
-  @Column({ type: "decimal", precision: 10, scale: 2 })
+  @Column({ type: "decimal", nullable: true, precision: 10, scale: 2 })
   precoPromocional: number;
 
   @Column({ type: "text", nullable: true })

@@ -18,7 +18,8 @@ E quais bibliotecas foram utilizadas no auxílio da construção do código.
 - [X] Implementar modelos do banco de dados e seus serviços
 - [X] Implementar controllers da aplicação
 - [X] Implementar rotas de acesso
-- [ ] Validar funcionamento da aplicação
+- [X] Validar funcionamento da aplicação
+- [X] Implementar teste de rotas
 - [ ] Configurar docker-compose para subir o banco
 
 ## Desafios
@@ -81,6 +82,12 @@ Após a configuração a API já pode ser executada, localmente pode ser utiliza
 `npm run dev`
 
 
+Caso queira rodar os testes da aplicação basta executar o seguinte comando
+(Importante a aplicação utiliza o arquivo .env.test como ambiente de testes, logo o banco que está utilizando é o goomer_teste ele precisa estar criado)
+
+`npm run test`
+
+
 Para rodar em produção é necessário fazer o build:
 
 `npm run build`
@@ -88,6 +95,8 @@ Para rodar em produção é necessário fazer o build:
 E iniciar a aplicação com:
 
 `npm run start`
+
+
 
 ## Rotas
 

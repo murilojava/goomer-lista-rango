@@ -78,7 +78,7 @@ export class ProdutoService {
     await this.validar(produto);
 
     const result = await this.manager.query(
-      `INSERT INTO produto (nome, preco, empresa_id, categoria_id, foto_id, em_promocao, preco_promocional, descricao_promocional) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO produto (nome, preco, empresa_id, categoria_id, foto_id, emPromocao, precoPromocional, descricaoPromocional) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         produto.nome,
         produto.preco,
@@ -107,7 +107,7 @@ export class ProdutoService {
   private async inserirHorariosPromocionais(produtoId: number, horarios: any) {
     for (const horario of horarios) {
       const result = await this.manager.query(
-        `INSERT INTO horario_promocional (dia_semana, inicio, fim, produto_id) VALUES (?, ?, ?, ?)`,
+        `INSERT INTO horario_promocional (diaSemana, inicio, fim, produto_id) VALUES (?, ?, ?, ?)`,
         [horario.diaSemana, horario.inicio, horario.fim, produtoId],
       );
 
@@ -119,7 +119,7 @@ export class ProdutoService {
     await this.validar(produto);
 
     await this.manager.query(
-      `UPDATE produto SET nome = ?, preco = ?, empresa_id = ?, categoria_id = ?, foto_id = ?, em_promocao = ?, preco_promocional = ?, descricao_promocional = ? WHERE id = ?`,
+      `UPDATE produto SET nome = ?, preco = ?, empresa_id = ?, categoria_id = ?, foto_id = ?, emPromocao = ?, precoPromocional = ?, descricaoPromocional = ? WHERE id = ?`,
       [
         produto.nome,
         produto.preco,
@@ -154,7 +154,7 @@ export class ProdutoService {
   async encontrarTodosPorEmpresaId(empresaId: number) {
     const dbResult = await this.manager.query(
       `select p.*, f.id as foto_id, f.key as foto_key, c.id as categoria_id, c.nome as categoria_nome from produto as p
-      left join foto as f on p.foto_id = f.id
+      left join imagem as f on p.foto_id = f.id
       left join categoria as c on p.categoria_id = c.id
       where p.empresa_id = ?`,
       [empresaId],
@@ -192,10 +192,11 @@ export class ProdutoService {
 
   async encontrarProdutoPorId(id: number) {
     const result = await this.manager.query(
-      `select p.*, f.id as foto_id, f.key as foto_key, c.id as categoria_id, c.nome as categoria_nome from produto as p
-      left join foto as f on p.foto_id = f.id
+      `select p.*, f.id as foto_id, f.key as foto_key, c.id as categoria_id, c.nome as categoria_nome 
+      from produto as p
+      left join imagem as f on p.foto_id = f.id
       left join categoria as c on p.categoria_id = c.id
-      where p.empresa_id = ?`,
+      where p.id = ?`,
       [id],
     );
 
@@ -212,7 +213,7 @@ export class ProdutoService {
 
   async encontrarHorariosPromocionais(id: number) {
     const result = await this.manager.query(
-      `SELECT * FROM horario_promocional WHERE empresa_id = ?`,
+      `SELECT * FROM horario_promocional WHERE produto_id = ?`,
       [id],
     );
 
