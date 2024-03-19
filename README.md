@@ -20,7 +20,7 @@ E quais bibliotecas foram utilizadas no auxílio da construção do código.
 - [X] Implementar rotas de acesso
 - [X] Validar funcionamento da aplicação
 - [X] Implementar teste de rotas
-- [ ] Configurar docker-compose para subir o banco
+- [X] Configurar docker-compose para subir o banco
 
 ## Desafios
 
@@ -42,14 +42,21 @@ E quais bibliotecas foram utilizadas no auxílio da construção do código.
 
 O projeto utiliza Typescript que é um camada em cima do javacript para permitir a tipagem de alguns elementos. Eu gosto pois facilita algumas inferências e torna mais fácil de dar manutênção. Tem uma desvantagem que o código precisa ser transpilado para javascript porém é um processo relativamente rápido.
 
-O projeto utiliza o express[] como framework de requisições http. É um framework bastante conhecido e de fácil utilização.
+O projeto utiliza o express[https://expressjs.com/pt-br/] como framework de requisições http. É um framework bastante conhecido e de fácil utilização.
 
-Para a conexão com o banco de dados utilizo o typeorm[] que é um biblioteca de mapeamento objeto relacional. Ela tem como objetivo além de estabelcer a conexão montar e relacionar as tabelas as entidades da aplicação. No projeto não utilizei as as estruturas da biblioteca para fazer os comando sql.
+Para a conexão com o banco de dados utilizo o typeorm[https://typeorm.io/] que é um biblioteca de mapeamento objeto relacional. Ela tem como objetivo além de estabelcer a conexão montar e relacionar as tabelas as entidades da aplicação. No projeto não utilizei as as estruturas da biblioteca para fazer os comando sql.
 
 O banco de dados utilizado na aplicação é o Mysql é necessário ter ele instalado na maquina para poder rodar a aplicação. (Acredito que vou fazer um docker-compose para levantar a aplicação via docker)
 
+## Como executar via docker-compose
 
-## Como executar \[Em desenvolvimento\]
+Para o docker-compose é bem simples basta executar o compando
+
+```docker-compose up```
+
+Vale ressaltar que se faz necessário ter o docker[https://www.docker.com/] instaldo no computador
+
+## Como executar localmente
 
 Após o clone do projeto
 
